@@ -11,5 +11,6 @@ func SetupRoutes() {
 	http.HandleFunc("PUT /UpdateAccount/{id}", handler.UpdateAccount)
 	http.HandleFunc("DELETE /DeleteAccount/{id}", handler.DeleteAccount)
 	http.HandleFunc("GET /GetAccounts", handler.GetAccounts)
-	http.HandleFunc("GET /GetOneAccount/{id}", handler.GetOneAccount)
+	http.HandleFunc("GET /GetAccountByID/{id}", handler.GetAccountByID)
+	http.HandleFunc("GET /GetAccountBySurname/{surname}", handler.GetAccountBySurname)
 }

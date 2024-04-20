@@ -6,26 +6,33 @@ import (
 	"log"
 	"sync"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 var (
-	db   *sql.DB
-	once sync.Once
+	db     *sql.DB
+	once   sync.Once
+	config = mysql.Config{
+		User:   "back",
+		Passwd: "password",
+		Net:    "tcp",
+		Addr:   "127.0.0.1:3306",
+		DBName: "gamer_shop",
+	}
 )
 
 func NewDB() {
 	once.Do(func() {
 		var err error
-		db, err = sql.Open("mysql", "back:password@tcp(localhost:3306)/gamer_shop?parseTime=true")
+		db, err = sql.Open("mysql", config.FormatDSN())
 		if err != nil {
-			log.Fatalf("can't open db: %v", err)
+			log.Fatalf("¡ERROR! => %v", err.Error())
 		}
 
 		if err = db.Ping(); err != nil {
-			log.Fatalf("can't do ping: %v", err)
+			log.Fatalf("¡ERROR! => %v", err.Error())
 		}
 
-		fmt.Println("connect to MySQL")
+		fmt.Println("Connect to MySQL")
 	})
 }
