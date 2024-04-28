@@ -26,11 +26,11 @@ func NewDB() {
 		var err error
 		db, err = sql.Open("mysql", config.FormatDSN())
 		if err != nil {
-			log.Fatalf("¡ERROR! => %v", err.Error())
+			log.Fatalf(err.Error())
 		}
 
 		if err = db.Ping(); err != nil {
-			log.Fatalf("¡ERROR! => %v", err.Error())
+			log.Fatalf(err.Error())
 		}
 
 		fmt.Println("Connect to MySQL")
