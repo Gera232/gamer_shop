@@ -1,10 +1,10 @@
-package middleware
+package api
 
 import (
 	"net/http"
 )
 
-func Logging(f http.HandlerFunc) http.HandlerFunc {
+func OnlyAdmin(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		f(w, r)
 	}

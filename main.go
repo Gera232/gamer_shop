@@ -1,16 +1,16 @@
 package main
 
 import (
-	"back-end/database"
-	"back-end/route"
+	"back-end/api"
+	"back-end/storage"
 	"log"
 	"net/http"
 )
 
 func main() {
-	route.SetupRoutes()
+	api.SetupRoutes()
 
-	database.NewDB()
+	storage.NewDB()
 
 	err := http.ListenAndServe(":80", nil)
 	if err != nil {

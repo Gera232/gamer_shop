@@ -8,8 +8,8 @@ import (
 )
 
 type JwtCustomClaims struct {
-	Name  string     `json:"name"`
-	Admin model.Rols `json:"admin"`
+	Surname string     `json:"surname"`
+	Role    model.Rols `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -22,12 +22,12 @@ func CreateToken(surname string, rol model.Rols) (string, error) {
 		},
 	}
 
-	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	token, err := t.SignedString([]byte("Warrior"))
+	CodifiedToken, err := token.SignedString([]byte("Pava electrica"))
 	if err != nil {
 		return "", err
 	}
 
-	return token, nil
+	return CodifiedToken, nil
 }

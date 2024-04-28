@@ -1,4 +1,4 @@
-package handler
+package api
 
 import (
 	"errors"
@@ -12,4 +12,5 @@ var (
 	errInternalServer  = errors.New("internal server error")
 	errExistAccount    = errors.New("this account already exist")
 	errAuthenticator   = errors.New("the surname or the password are wrong")
+	// errUnauthorized    = errors.New("unauthorized")
 )

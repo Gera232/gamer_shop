@@ -1,4 +1,4 @@
-package database
+package storage
 
 import (
 	model "back-end/model/account"
@@ -23,7 +23,7 @@ func CreateAccount(m *model.Account) error {
 		m.Surname,
 		m.Email,
 		security.Encode(m.Password),
-		m.Rol,
+		m.Role,
 	)
 	if err != nil {
 		return err
@@ -53,7 +53,7 @@ func GetAccountByID(id uint32) (model.Account, error) {
 		&account.Name,
 		&account.Surname,
 		&account.Email,
-		&account.Rol,
+		&account.Role,
 		&account.AddressID,
 		&account.CardID,
 	)
@@ -79,7 +79,7 @@ func GetAccountBySurname(surname string) (model.Account, error) {
 		&account.Name,
 		&account.Surname,
 		&account.Email,
-		&account.Rol,
+		&account.Role,
 		&account.AddressID,
 		&account.CardID,
 	)
@@ -100,12 +100,12 @@ func Logging(surname string, password string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	pass, err := security.Decode(account.Password)
+	DecodePass, err := security.Decode(account.Password)
 	if err != nil {
 		return false, err
 	}
 
-	if account.Surname != surname && pass != password {
+	if account.Surname != surname && DecodePass != password {
 		return false, nil
 	}
 

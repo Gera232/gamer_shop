@@ -1,8 +1,9 @@
-package handler
+package api
 
 import (
-	"back-end/database"
 	model "back-end/model/account"
+	"back-end/security"
+	"back-end/storage"
 	"encoding/json"
 	"io"
 	"log"
@@ -10,7 +11,7 @@ import (
 	"strconv"
 )
 
-func CreateAccount(w http.ResponseWriter, r *http.Request) {
+func createAccount(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -31,15 +32,14 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	v := database.ExistAccount(account.Surname)
-	log.Println(v)
-	if v {
+	existAccount := storage.ExistAccount(account.Surname)
+	if existAccount {
 		response := newResponse("Error", errExistAccount.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
 
-	err = database.CreateAccount(&account)
+	err = storage.CreateAccount(&account)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -51,19 +51,19 @@ func CreateAccount(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusCreated, response)
 }
 
-func UpdateAccount(w http.ResponseWriter, r *http.Request) {}
+func updateAccount(w http.ResponseWriter, r *http.Request) {}
 
-func DeleteAccount(w http.ResponseWriter, r *http.Request) {}
+func deleteAccount(w http.ResponseWriter, r *http.Request) {}
 
-func GetAccounts(w http.ResponseWriter, r *http.Request) {}
+func getAccounts(w http.ResponseWriter, r *http.Request) {}
 
-func GetAccountByID(w http.ResponseWriter, r *http.Request) {
+func getAccountByID(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	v := r.PathValue("id")
+	id := r.PathValue("id")
 
-	v64, err := strconv.ParseUint(v, 10, 32)
+	id64, err := strconv.ParseUint(id, 10, 32)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -71,9 +71,9 @@ func GetAccountByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := uint32(v64)
+	id32 := uint32(id64)
 
-	account, err := database.GetAccountByID(id)
+	account, err := storage.GetAccountByID(id32)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -85,13 +85,13 @@ func GetAccountByID(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func GetAccountBySurname(w http.ResponseWriter, r *http.Request) {
+func getAccountBySurname(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
 	surname := r.PathValue("surname")
 
-	account, err := database.GetAccountBySurname(surname)
+	account, err := storage.GetAccountBySurname(surname)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -103,7 +103,7 @@ func GetAccountBySurname(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func Logging(w http.ResponseWriter, r *http.Request) {
+func logging(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -124,7 +124,7 @@ func Logging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	v, err := database.Logging(account.Surname, account.Password)
+	auhtenticator, err := storage.Logging(account.Surname, account.Password)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -132,9 +132,20 @@ func Logging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !v {
+	if !auhtenticator {
 		response := newResponse("Error", errAuthenticator.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
+
+	token, err := security.CreateToken(account.Surname, account.Role)
+	if err != nil {
+		log.Println(err)
+		response := newResponse("Error", errInternalServer.Error(), nil)
+		responseJSON(w, http.StatusInternalServerError, response)
+		return
+	}
+
+	response := newResponse("", "", token)
+	responseJSON(w, http.StatusOK, response)
 }

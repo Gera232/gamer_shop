@@ -6,7 +6,7 @@ type Account struct {
 	Surname   string `json:"surname"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
-	Rol       Rols   `json:"role"`
+	Role      Rols   `json:"role"`
 	AddressID uint32 `json:"addressID"`
 	CardID    uint32 `json:"cardID"`
 }
