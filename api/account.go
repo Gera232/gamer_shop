@@ -71,9 +71,7 @@ func getAccountByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id32 := uint32(id64)
-
-	account, err := storage.GetAccountByID(id32)
+	account, err := storage.GetAccountByID(uint32(id64))
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -123,8 +121,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
-
-	auhtenticator, err := storage.Logging(account.Surname, account.Password)
+	role, auhtenticator, err := storage.Logging(account.Surname, account.Password)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -138,7 +135,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := security.CreateToken(account.Surname, account.Role)
+	token, err := security.CreateToken(role)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)

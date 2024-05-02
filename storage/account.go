@@ -3,12 +3,13 @@ package storage
 import (
 	model "back-end/model/account"
 	"back-end/security"
+	"database/sql"
 )
 
 var (
 	sentenceCreateAccount       = "INSERT INTO account (name, surname, email, password, role) VALUES (?, ?, ?, ?, ?);"
-	sentenceGetAccountByID      = "SELECT account_id, name, surname, email, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE account_id = ?;"
-	sentenceGetAccountBySurname = "SELECT account_id, name, surname, email, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE surname = ?;"
+	sentenceGetAccountByID      = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE account_id = ?;"
+	sentenceGetAccountBySurname = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE surname = ?;"
 )
 
 func CreateAccount(m *model.Account) error {
@@ -47,16 +48,7 @@ func GetAccountByID(id uint32) (model.Account, error) {
 
 	row := stmt.QueryRow(id)
 
-	account := model.Account{}
-	err = row.Scan(
-		&account.ID,
-		&account.Name,
-		&account.Surname,
-		&account.Email,
-		&account.Role,
-		&account.AddressID,
-		&account.CardID,
-	)
+	account, err := scanRow(row)
 	if err != nil {
 		return model.Account{}, err
 	}
@@ -73,16 +65,7 @@ func GetAccountBySurname(surname string) (model.Account, error) {
 
 	row := stmt.QueryRow(surname)
 
-	account := model.Account{}
-	err = row.Scan(
-		&account.ID,
-		&account.Name,
-		&account.Surname,
-		&account.Email,
-		&account.Role,
-		&account.AddressID,
-		&account.CardID,
-	)
+	account, err := scanRow(row)
 	if err != nil {
 		return model.Account{}, err
 	}
@@ -95,19 +78,38 @@ func ExistAccount(surname string) bool {
 	return account.Surname == surname
 }
 
-func Logging(surname string, password string) (bool, error) {
+func Logging(surname string, password string) (string, bool, error) {
 	account, err := GetAccountBySurname(surname)
 	if err != nil {
-		return false, err
+		return "", false, err
 	}
+
 	DecodePass, err := security.Decode(account.Password)
 	if err != nil {
-		return false, err
+		return "", false, err
 	}
 
-	if account.Surname != surname && DecodePass != password {
-		return false, nil
+	if DecodePass != password {
+		return "", false, nil
 	}
 
-	return true, nil
+	return string(account.Role), true, nil
+}
+
+func scanRow(row *sql.Row) (model.Account, error) {
+	account := model.Account{}
+	err := row.Scan(
+		&account.ID,
+		&account.Name,
+		&account.Surname,
+		&account.Email,
+		&account.Password,
+		&account.Role,
+		&account.AddressID,
+		&account.CardID,
+	)
+	if err != nil {
+		return model.Account{}, err
+	}
+	return account, nil
 }
