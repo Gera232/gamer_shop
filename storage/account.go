@@ -10,6 +10,7 @@ var (
 	sentenceCreateAccount       = "INSERT INTO account (name, surname, email, password, role) VALUES (?, ?, ?, ?, ?);"
 	sentenceGetAccountByID      = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE account_id = ?;"
 	sentenceGetAccountBySurname = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE surname = ?;"
+	sentenceDeleteAccount       = "DELETE FROM account WHERE account_id = ?;"
 )
 
 func CreateAccount(m *model.Account) error {
@@ -35,7 +36,20 @@ func CreateAccount(m *model.Account) error {
 
 func UpdateAccount() {}
 
-func DeleteAccount() {}
+func DeleteAccount(id uint32) error {
+	stmt, err := db.Prepare(sentenceDeleteAccount)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func GetAccounts() {}
 
@@ -73,9 +87,14 @@ func GetAccountBySurname(surname string) (model.Account, error) {
 	return account, nil
 }
 
-func ExistAccount(surname string) bool {
+func ExistAccountSurname(surname string) bool {
 	account, _ := GetAccountBySurname(surname)
 	return account.Surname == surname
+}
+
+func ExistAccountID(id uint32) bool {
+	account, _ := GetAccountByID(id)
+	return account.ID == id
 }
 
 func Logging(surname string, password string) (string, bool, error) {

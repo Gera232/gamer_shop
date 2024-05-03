@@ -15,14 +15,14 @@ func onlyAdmin(f http.HandlerFunc) http.HandlerFunc {
 		token, err := security.ValidateJWT(tokenString)
 		if err != nil {
 			log.Println(err)
-			response := newResponse("Error", "permission denied", nil)
+			response := newResponse("Error", errUnauthorized.Error(), nil)
 			responseJSON(w, http.StatusUnauthorized, response)
 			return
 		}
 
 		if !token.Valid {
 			log.Println(err)
-			response := newResponse("Error", "permission denied", nil)
+			response := newResponse("Error", errUnauthorized.Error(), nil)
 			responseJSON(w, http.StatusUnauthorized, response)
 			return
 		}
@@ -30,7 +30,7 @@ func onlyAdmin(f http.HandlerFunc) http.HandlerFunc {
 		claims := token.Claims.(jwt.MapClaims)
 		if claims["role"] != "admin" {
 			log.Println(claims["role"])
-			response := newResponse("Error", "permission denied", nil)
+			response := newResponse("Error", errUnauthorized.Error(), nil)
 			responseJSON(w, http.StatusUnauthorized, response)
 			return
 		}

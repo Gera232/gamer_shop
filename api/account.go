@@ -32,7 +32,7 @@ func createAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	existAccount := storage.ExistAccount(account.Surname)
+	existAccount := storage.ExistAccountSurname(account.Surname)
 	if existAccount {
 		response := newResponse("Error", errExistAccount.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
@@ -47,15 +47,52 @@ func createAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := newResponse("Message", "Account created", nil)
+	response := newResponse("Message", "successful creation", nil)
 	responseJSON(w, http.StatusCreated, response)
 }
 
-func updateAccount(w http.ResponseWriter, r *http.Request) {}
+func updateAccount(w http.ResponseWriter, r *http.Request) {
+	response := newResponse("Message", "ok", nil)
+	responseJSON(w, http.StatusCreated, response)
+}
 
-func deleteAccount(w http.ResponseWriter, r *http.Request) {}
+func deleteAccount(w http.ResponseWriter, r *http.Request) {
+	lock.Lock()
+	defer lock.Unlock()
 
-func getAccounts(w http.ResponseWriter, r *http.Request) {}
+	id := r.PathValue("id")
+
+	id64, err := strconv.ParseUint(id, 10, 32)
+	if err != nil {
+		log.Println(err)
+		response := newResponse("Error", errInternalServer.Error(), nil)
+		responseJSON(w, http.StatusInternalServerError, response)
+		return
+	}
+
+	existAccount := storage.ExistAccountID(uint32(id64))
+	if !existAccount {
+		response := newResponse("Error", errAccountNotExist.Error(), nil)
+		responseJSON(w, http.StatusBadRequest, response)
+		return
+	}
+
+	err = storage.DeleteAccount(uint32(id64))
+	if err != nil {
+		log.Println(err)
+		response := newResponse("Error", errInternalServer.Error(), nil)
+		responseJSON(w, http.StatusInternalServerError, response)
+		return
+	}
+
+	response := newResponse("Message", "successful removal", nil)
+	responseJSON(w, http.StatusCreated, response)
+}
+
+func getAccounts(w http.ResponseWriter, r *http.Request) {
+	response := newResponse("Message", "ok", nil)
+	responseJSON(w, http.StatusCreated, response)
+}
 
 func getAccountByID(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
@@ -68,6 +105,13 @@ func getAccountByID(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
 		responseJSON(w, http.StatusInternalServerError, response)
+		return
+	}
+
+	existAccount := storage.ExistAccountID(uint32(id64))
+	if !existAccount {
+		response := newResponse("Error", errAccountNotExist.Error(), nil)
+		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
 
@@ -88,6 +132,13 @@ func getAccountBySurname(w http.ResponseWriter, r *http.Request) {
 	defer lock.Unlock()
 
 	surname := r.PathValue("surname")
+
+	existAccount := storage.ExistAccountSurname(surname)
+	if !existAccount {
+		response := newResponse("Error", errAccountNotExist.Error(), nil)
+		responseJSON(w, http.StatusBadRequest, response)
+		return
+	}
 
 	account, err := storage.GetAccountBySurname(surname)
 	if err != nil {
