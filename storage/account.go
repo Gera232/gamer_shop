@@ -11,6 +11,8 @@ var (
 	sentenceGetAccountByID      = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE account_id = ?;"
 	sentenceGetAccountBySurname = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE surname = ?;"
 	sentenceDeleteAccount       = "DELETE FROM account WHERE account_id = ?;"
+	sentenceUpdateAccount       = "UPDATE account SET name = ?, surname = ?, email = ? WHERE surname = ?;"
+	sentenceGetAccounts         = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account;"
 )
 
 func CreateAccount(m *model.Account) error {
@@ -34,7 +36,25 @@ func CreateAccount(m *model.Account) error {
 	return nil
 }
 
-func UpdateAccount() {}
+func UpdateAccount(m *model.Account) error {
+	stmt, err := db.Prepare(sentenceUpdateAccount)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(
+		m.Name,
+		m.Surname,
+		m.Email,
+		m.Surname,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func DeleteAccount(id uint32) error {
 	stmt, err := db.Prepare(sentenceDeleteAccount)
@@ -51,7 +71,39 @@ func DeleteAccount(id uint32) error {
 	return nil
 }
 
-func GetAccounts() {}
+func GetAccounts() (model.Accounts, error) {
+	stmt, err := db.Prepare(sentenceGetAccounts)
+	if err != nil {
+		return model.Accounts{}, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		return model.Accounts{}, err
+	}
+
+	accounts := make(model.Accounts, 0)
+	for rows.Next() {
+		account := &model.Account{}
+		err := rows.Scan(
+			&account.ID,
+			&account.Name,
+			&account.Surname,
+			&account.Email,
+			&account.Password,
+			&account.Role,
+			&account.AddressID,
+			&account.CardID,
+		)
+		if err != nil {
+			return model.Accounts{}, err
+		}
+		accounts = append(accounts, account)
+	}
+
+	return accounts, nil
+}
 
 func GetAccountByID(id uint32) (model.Account, error) {
 	stmt, err := db.Prepare(sentenceGetAccountByID)

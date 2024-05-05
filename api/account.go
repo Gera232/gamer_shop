@@ -52,8 +52,43 @@ func createAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateAccount(w http.ResponseWriter, r *http.Request) {
-	response := newResponse("Message", "ok", nil)
-	responseJSON(w, http.StatusCreated, response)
+	lock.Lock()
+	defer lock.Unlock()
+
+	account := model.Account{}
+
+	reqBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println(err)
+		response := newResponse("Error", errInternalServer.Error(), nil)
+		responseJSON(w, http.StatusInternalServerError, response)
+		return
+	}
+
+	err = json.Unmarshal(reqBody, &account)
+	if err != nil {
+		response := newResponse("Error", errUnmarshalFields.Error(), nil)
+		responseJSON(w, http.StatusBadRequest, response)
+		return
+	}
+
+	existAccount := storage.ExistAccountSurname(account.Surname)
+	if !existAccount {
+		response := newResponse("Error", errExistAccount.Error(), nil)
+		responseJSON(w, http.StatusBadRequest, response)
+		return
+	}
+
+	err = storage.UpdateAccount(&account)
+	if err != nil {
+		log.Println(err)
+		response := newResponse("Error", errInternalServer.Error(), nil)
+		responseJSON(w, http.StatusInternalServerError, response)
+		return
+	}
+
+	response := newResponse("Message", "successful modify", nil)
+	responseJSON(w, http.StatusOK, response)
 }
 
 func deleteAccount(w http.ResponseWriter, r *http.Request) {
@@ -86,12 +121,23 @@ func deleteAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := newResponse("Message", "successful removal", nil)
-	responseJSON(w, http.StatusCreated, response)
+	responseJSON(w, http.StatusOK, response)
 }
 
 func getAccounts(w http.ResponseWriter, r *http.Request) {
-	response := newResponse("Message", "ok", nil)
-	responseJSON(w, http.StatusCreated, response)
+	lock.Lock()
+	defer lock.Unlock()
+
+	accounts, err := storage.GetAccounts()
+	if err != nil {
+		log.Println(err)
+		response := newResponse("Error", errInternalServer.Error(), nil)
+		responseJSON(w, http.StatusInternalServerError, response)
+		return
+	}
+
+	response := newResponse("", "", accounts)
+	responseJSON(w, http.StatusOK, response)
 }
 
 func getAccountByID(w http.ResponseWriter, r *http.Request) {

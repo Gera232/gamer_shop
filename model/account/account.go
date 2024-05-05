@@ -11,7 +11,7 @@ type Account struct {
 	CardID    uint32 `json:"cardID"`
 }
 
-type Accounts []Account
+type Accounts []*Account
 
 type Rols string
 
