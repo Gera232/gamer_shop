@@ -7,6 +7,7 @@ import (
 
 var (
 	lock = sync.Mutex{}
+
 	// errors
 	errUnmarshalFields = errors.New("the data type of some field is wrong")
 	errInternalServer  = errors.New("internal server error")
