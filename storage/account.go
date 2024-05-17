@@ -83,26 +83,26 @@ func GetAccounts() (model.Accounts, error) {
 		return model.Accounts{}, err
 	}
 
-	accounts := make(model.Accounts, 0)
+	accs := make(model.Accounts, 0)
 	for rows.Next() {
-		account := &model.Account{}
+		acc := &model.Account{}
 		err := rows.Scan(
-			&account.ID,
-			&account.Name,
-			&account.Surname,
-			&account.Email,
-			&account.Password,
-			&account.Role,
-			&account.AddressID,
-			&account.CardID,
+			&acc.ID,
+			&acc.Name,
+			&acc.Surname,
+			&acc.Email,
+			&acc.Password,
+			&acc.Role,
+			&acc.AddressID,
+			&acc.CardID,
 		)
 		if err != nil {
 			return model.Accounts{}, err
 		}
-		accounts = append(accounts, account)
+		accs = append(accs, acc)
 	}
 
-	return accounts, nil
+	return accs, nil
 }
 
 func GetAccountByID(id uint32) (model.Account, error) {
@@ -114,12 +114,12 @@ func GetAccountByID(id uint32) (model.Account, error) {
 
 	row := stmt.QueryRow(id)
 
-	account, err := scanRow(row)
+	acc, err := scanRow(row)
 	if err != nil {
 		return model.Account{}, err
 	}
 
-	return account, nil
+	return acc, nil
 }
 
 func GetAccountBySurname(surname string) (model.Account, error) {
@@ -131,56 +131,56 @@ func GetAccountBySurname(surname string) (model.Account, error) {
 
 	row := stmt.QueryRow(surname)
 
-	account, err := scanRow(row)
+	acc, err := scanRow(row)
 	if err != nil {
 		return model.Account{}, err
 	}
 
-	return account, nil
+	return acc, nil
 }
 
 func ExistAccountSurname(surname string) bool {
-	account, _ := GetAccountBySurname(surname)
-	return account.Surname == surname
+	acc, _ := GetAccountBySurname(surname)
+	return acc.Surname == surname
 }
 
 func ExistAccountID(id uint32) bool {
-	account, _ := GetAccountByID(id)
-	return account.ID == id
+	acc, _ := GetAccountByID(id)
+	return acc.ID == id
 }
 
-func Logging(surname string, password string) (string, bool, error) {
-	account, err := GetAccountBySurname(surname)
+func Logging(surname string, passwd string) (string, bool, error) {
+	acc, err := GetAccountBySurname(surname)
 	if err != nil {
 		return "", false, err
 	}
 
-	DecodePass, err := security.Decode(account.Password)
+	DecodePass, err := security.Decode(acc.Password)
 	if err != nil {
 		return "", false, err
 	}
 
-	if DecodePass != password {
+	if DecodePass != passwd {
 		return "", false, nil
 	}
 
-	return string(account.Role), true, nil
+	return string(acc.Role), true, nil
 }
 
 func scanRow(row *sql.Row) (model.Account, error) {
-	account := model.Account{}
+	acc := model.Account{}
 	err := row.Scan(
-		&account.ID,
-		&account.Name,
-		&account.Surname,
-		&account.Email,
-		&account.Password,
-		&account.Role,
-		&account.AddressID,
-		&account.CardID,
+		&acc.ID,
+		&acc.Name,
+		&acc.Surname,
+		&acc.Email,
+		&acc.Password,
+		&acc.Role,
+		&acc.AddressID,
+		&acc.CardID,
 	)
 	if err != nil {
 		return model.Account{}, err
 	}
-	return account, nil
+	return acc, nil
 }

@@ -15,7 +15,7 @@ func createAccount(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	account := model.Account{}
+	acc := model.Account{}
 
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -25,21 +25,21 @@ func createAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.Unmarshal(reqBody, &account)
+	err = json.Unmarshal(reqBody, &acc)
 	if err != nil {
 		response := newResponse("Error", errUnmarshalFields.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
 
-	existAccount := storage.ExistAccountSurname(account.Surname)
-	if existAccount {
+	existAcc := storage.ExistAccountSurname(acc.Surname)
+	if existAcc {
 		response := newResponse("Error", errExistAccount.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
 
-	err = storage.CreateAccount(&account)
+	err = storage.CreateAccount(&acc)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -55,7 +55,7 @@ func updateAccount(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	account := model.Account{}
+	acc := model.Account{}
 
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -65,21 +65,21 @@ func updateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.Unmarshal(reqBody, &account)
+	err = json.Unmarshal(reqBody, &acc)
 	if err != nil {
 		response := newResponse("Error", errUnmarshalFields.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
 
-	existAccount := storage.ExistAccountSurname(account.Surname)
-	if !existAccount {
+	existAcc := storage.ExistAccountSurname(acc.Surname)
+	if !existAcc {
 		response := newResponse("Error", errExistAccount.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
 
-	err = storage.UpdateAccount(&account)
+	err = storage.UpdateAccount(&acc)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -105,8 +105,8 @@ func deleteAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	existAccount := storage.ExistAccountID(uint32(id64))
-	if !existAccount {
+	existAcc := storage.ExistAccountID(uint32(id64))
+	if !existAcc {
 		response := newResponse("Error", errAccountNotExist.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
@@ -128,7 +128,7 @@ func getAccounts(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	accounts, err := storage.GetAccounts()
+	accs, err := storage.GetAccounts()
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -136,7 +136,7 @@ func getAccounts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := newResponse("", "", accounts)
+	response := newResponse("", "", accs)
 	responseJSON(w, http.StatusOK, response)
 }
 
@@ -154,8 +154,8 @@ func getAccountByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	existAccount := storage.ExistAccountID(uint32(id64))
-	if !existAccount {
+	existAcc := storage.ExistAccountID(uint32(id64))
+	if !existAcc {
 		response := newResponse("Error", errAccountNotExist.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
@@ -179,14 +179,14 @@ func getAccountBySurname(w http.ResponseWriter, r *http.Request) {
 
 	surname := r.PathValue("surname")
 
-	existAccount := storage.ExistAccountSurname(surname)
-	if !existAccount {
+	existAcc := storage.ExistAccountSurname(surname)
+	if !existAcc {
 		response := newResponse("Error", errAccountNotExist.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
 
-	account, err := storage.GetAccountBySurname(surname)
+	acc, err := storage.GetAccountBySurname(surname)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -194,7 +194,7 @@ func getAccountBySurname(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := newResponse("", "", account)
+	response := newResponse("", "", acc)
 	responseJSON(w, http.StatusOK, response)
 }
 
@@ -202,7 +202,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	account := model.Account{}
+	acc := model.Account{}
 
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -212,13 +212,13 @@ func logging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = json.Unmarshal(reqBody, &account)
+	err = json.Unmarshal(reqBody, &acc)
 	if err != nil {
 		response := newResponse("Error", errUnmarshalFields.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
-	role, auhtenticator, err := storage.Logging(account.Surname, account.Password)
+	role, auht, err := storage.Logging(acc.Surname, acc.Password)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -226,7 +226,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !auhtenticator {
+	if !auht {
 		response := newResponse("Error", errAuthenticator.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return

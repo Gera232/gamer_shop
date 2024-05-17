@@ -23,7 +23,8 @@ var (
 
 func NewDB() {
 	once.Do(func() {
-		db, err := sql.Open("mysql", config.FormatDSN())
+		var err error
+		db, err = sql.Open("mysql", config.FormatDSN())
 		if err != nil {
 			log.Fatal(err.Error())
 		}
