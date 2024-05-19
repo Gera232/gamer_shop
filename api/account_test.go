@@ -7,24 +7,22 @@ import (
 )
 
 func TestGetAccounts(t *testing.T) {
-	req, err := http.NewRequest("GET", "/GetAccounts", nil)
+	s := httptest.NewServer(http.HandlerFunc(getAccounts))
+	defer s.Close()
+
+	req, err := http.NewRequest("GET", s.URL, nil)
 	if err != nil {
-		t.Fatal(err)
+		t.Error(err)
 	}
+	defer req.Body.Close()
 
-	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(getAccounts)
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		t.Error(err)
+	}
+	defer res.Body.Close()
 
-	handler.ServeHTTP(rr, req)
-
-	if status := rr.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusOK)
+	if res.StatusCode != 200 {
+		t.Error(res.StatusCode)
 	}
 }
-
-/* expected := `{"alive": true}`
-if rr.Body.String() != expected {
-	t.Errorf("handler returned unexpected body: got %v want %v",
-		rr.Body.String(), expected)
-} */

@@ -82,6 +82,7 @@ func GetAccounts() (model.Accounts, error) {
 	if err != nil {
 		return model.Accounts{}, err
 	}
+	defer rows.Close()
 
 	accs := make(model.Accounts, 0)
 	for rows.Next() {

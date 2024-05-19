@@ -6,17 +6,17 @@ type Account struct {
 	Surname   string `json:"surname"`
 	Email     string `json:"email"`
 	Password  string `json:"password"`
-	Role      Rols   `json:"role"`
+	Role      rols   `json:"role"`
 	AddressID uint32 `json:"addressID"`
 	CardID    uint32 `json:"cardID"`
 }
 
 type Accounts []*Account
 
-type Rols string
+type rols string
 
 const (
-	user   Rols = "user"
-	admin  Rols = "admin"
-	worker Rols = "worker"
+	user   rols = "user"
+	admin  rols = "admin"
+	worker rols = "worker"
 )
