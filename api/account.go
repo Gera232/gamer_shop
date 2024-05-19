@@ -74,7 +74,7 @@ func updateAccount(w http.ResponseWriter, r *http.Request) {
 
 	existAcc := storage.ExistAccountSurname(acc.Surname)
 	if !existAcc {
-		response := newResponse("Error", errExistAccount.Error(), nil)
+		response := newResponse("Error", errAccountNotExist.Error(), nil)
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
