@@ -3,7 +3,6 @@ package storage
 import (
 	"database/sql"
 	"log"
-	"os"
 	"sync"
 
 	"github.com/go-sql-driver/mysql"
@@ -17,7 +16,7 @@ var (
 		Passwd: "password",
 		Net:    "tcp",
 		Addr:   "127.0.0.1:3306",
-		DBName: os.Getenv("DB_NAME"),
+		DBName: "gamer_shop",
 	}
 )
 
