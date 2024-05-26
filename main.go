@@ -20,7 +20,7 @@ func main() {
 
 	storage.NewDB()
 
-	log.Println("all good")
+	log.Println("Starting server...")
 
 	err = http.ListenAndServe(os.Getenv("SERVER_PORT"), nil)
 	if err != nil {
