@@ -3,26 +3,30 @@ package storage
 import (
 	"database/sql"
 	"log"
+	"os"
 	"sync"
 
 	"github.com/go-sql-driver/mysql"
 )
 
 var (
-	db     *sql.DB
-	once   sync.Once
-	config = mysql.Config{
-		User:   "back",
-		Passwd: "password",
-		Net:    "tcp",
-		Addr:   "127.0.0.1:3306",
-		DBName: "gamer_shop",
-	}
+	db   *sql.DB
+	once sync.Once
 )
 
 func NewDB() {
 	once.Do(func() {
-		var err error
+		var (
+			err    error
+			config = mysql.Config{
+				User:   os.Getenv("DB_USER"),
+				Passwd: os.Getenv("DB_PASS"),
+				Net:    os.Getenv("DB_NET"),
+				Addr:   os.Getenv("DB_ADDR"),
+				DBName: os.Getenv("DB_NAME"),
+			}
+		)
+
 		db, err = sql.Open("mysql", config.FormatDSN())
 		if err != nil {
 			log.Fatal(err)

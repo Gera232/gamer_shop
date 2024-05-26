@@ -5,6 +5,7 @@ import (
 	"back-end/storage"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -21,7 +22,7 @@ func main() {
 
 	log.Println("all good")
 
-	err = http.ListenAndServe(":80", nil)
+	err = http.ListenAndServe(os.Getenv("SERVER_PORT"), nil)
 	if err != nil {
 		log.Fatal(err)
 	}

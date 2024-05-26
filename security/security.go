@@ -8,9 +8,11 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-func CreateToken(role string) (string, error) {
-	sk := os.Getenv("TOKEN_KEY")
+var (
+	tk = os.Getenv("TOKEN_KEY")
+)
 
+func CreateToken(role string) (string, error) {
 	claims := &jwt.MapClaims{
 		"role":      role,
 		"expiresAT": 15000,
@@ -18,7 +20,7 @@ func CreateToken(role string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	CodifiedToken, err := token.SignedString([]byte(sk))
+	CodifiedToken, err := token.SignedString([]byte(tk))
 	if err != nil {
 		return "", err
 	}
@@ -27,14 +29,12 @@ func CreateToken(role string) (string, error) {
 }
 
 func ValidateJWT(tokenString string) (*jwt.Token, error) {
-	sk := os.Getenv("TOKEN_KEY")
-
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %d", token.Header["alg"])
 		}
 
-		return []byte(sk), nil
+		return []byte(tk), nil
 	})
 }
 
