@@ -1,11 +1,10 @@
 package main
 
 import (
-	"back-end/api"
-	"back-end/storage"
+	"backend/api"
+	"backend/storage"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -20,9 +19,9 @@ func main() {
 
 	storage.NewDB()
 
-	log.Println("Starting server...")
+	log.Println("Powering up server...")
 
-	err = http.ListenAndServe(os.Getenv("SERVER_PORT"), nil)
+	err = http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
