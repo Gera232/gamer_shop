@@ -23,7 +23,7 @@ func NewDB() {
 				Passwd: os.Getenv("DB_PASS"),
 				Net:    os.Getenv("DB_NET"),
 				Addr:   os.Getenv("DB_ADDR"),
-				DBName: os.Getenv("DB_NAME"),
+				DBName: os.Getenv("MYSQL_DATABASE"),
 			}
 		)
 
