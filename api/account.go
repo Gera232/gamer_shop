@@ -48,7 +48,7 @@ func createAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := newResponse("Message", "successful creation", nil)
-	responseJSON(w, http.StatusCreated, response)
+	responseJSON(w, http.StatusOK, response)
 }
 
 func updateAccount(w http.ResponseWriter, r *http.Request) {

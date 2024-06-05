@@ -5,6 +5,9 @@ import (
 )
 
 func SetupRoutes() {
+	// Migrate
+	http.HandleFunc("POST /Migrate", migrate)
+
 	// Account
 	http.HandleFunc("POST /CreateAccount", createAccount)
 	http.HandleFunc("PUT /UpdateAccount", onlyAdmin(updateAccount))

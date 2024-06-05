@@ -19,10 +19,10 @@ func NewDB() {
 		var (
 			err    error
 			config = mysql.Config{
-				User:   os.Getenv("DB_USER"),
-				Passwd: os.Getenv("DB_PASS"),
-				Net:    os.Getenv("DB_NET"),
-				Addr:   os.Getenv("DB_ADDR"),
+				User:   os.Getenv("MYSQL_USER"),
+				Passwd: os.Getenv("MYSQL_PASSWORD"),
+				Net:    os.Getenv("MYSQL_NET"),
+				Addr:   os.Getenv("MYSQL_ADDRESS"),
 				DBName: os.Getenv("MYSQL_DATABASE"),
 			}
 		)

@@ -5,23 +5,18 @@ import (
 	"backend/storage"
 	"log"
 	"net/http"
-
-	"github.com/joho/godotenv"
+	"time"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
+	time.Sleep(time.Second * 5)
+	storage.NewDB()
 
 	api.SetupRoutes()
 
-	storage.NewDB()
-
 	log.Println("Powering up server...")
 
-	err = http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
