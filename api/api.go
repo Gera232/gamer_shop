@@ -1,10 +1,7 @@
 package api
 
 import (
-	"backend/storage"
 	"errors"
-	"log"
-	"net/http"
 	"sync"
 )
 
@@ -19,13 +16,3 @@ var (
 	errUnauthorized    = errors.New("unauthorized")
 	errAccountNotExist = errors.New("this account not exist")
 )
-
-func migrate(w http.ResponseWriter, r *http.Request) {
-	err := storage.Migrate()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	response := newResponse("Message", "successful migration", nil)
-	responseJSON(w, http.StatusOK, response)
-}
