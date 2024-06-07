@@ -4,19 +4,13 @@ import (
 	"backend/model"
 	"backend/security"
 	"database/sql"
-)
-
-var (
-	sentenceCreateAccount       = "INSERT INTO account (name, surname, email, password, role) VALUES (?, ?, ?, ?, ?);"
-	sentenceGetAccountByID      = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE account_id = ?;"
-	sentenceGetAccountBySurname = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account WHERE surname = ?;"
-	sentenceDeleteAccount       = "DELETE FROM account WHERE account_id = ?;"
-	sentenceUpdateAccount       = "UPDATE account SET name = ?, surname = ?, email = ? WHERE surname = ?;"
-	sentenceGetAccounts         = "SELECT account_id, name, surname, email, password, role, COALESCE(address_id, 0) AS address_id, COALESCE(card_id, 0) AS card_id FROM account;"
+	"os"
 )
 
 func CreateAccount(m *model.Account) error {
-	stmt, err := db.Prepare(sentenceCreateAccount)
+	sentence := os.Getenv("SENTENCE_CREATE_ACCOUNT")
+
+	stmt, err := db.Prepare(sentence)
 	if err != nil {
 		return err
 	}
@@ -37,7 +31,9 @@ func CreateAccount(m *model.Account) error {
 }
 
 func UpdateAccount(m *model.Account) error {
-	stmt, err := db.Prepare(sentenceUpdateAccount)
+	sentence := os.Getenv("SENTENCE_UPDATE_ACCOUNT")
+
+	stmt, err := db.Prepare(sentence)
 	if err != nil {
 		return err
 	}
@@ -57,7 +53,9 @@ func UpdateAccount(m *model.Account) error {
 }
 
 func DeleteAccount(id uint32) error {
-	stmt, err := db.Prepare(sentenceDeleteAccount)
+	sentence := os.Getenv("SENTENCE_DELETE_ACCOUNT")
+
+	stmt, err := db.Prepare(sentence)
 	if err != nil {
 		return err
 	}
@@ -72,7 +70,9 @@ func DeleteAccount(id uint32) error {
 }
 
 func GetAccounts() (model.Accounts, error) {
-	stmt, err := db.Prepare(sentenceGetAccounts)
+	sentence := os.Getenv("SENTENCE_GET_ACCOUNTS")
+
+	stmt, err := db.Prepare(sentence)
 	if err != nil {
 		return model.Accounts{}, err
 	}
@@ -107,7 +107,9 @@ func GetAccounts() (model.Accounts, error) {
 }
 
 func GetAccountByID(id uint32) (model.Account, error) {
-	stmt, err := db.Prepare(sentenceGetAccountByID)
+	sentence := os.Getenv("SENTENCE_GET_ACCOUNT_BY_ID")
+
+	stmt, err := db.Prepare(sentence)
 	if err != nil {
 		return model.Account{}, err
 	}
@@ -124,7 +126,9 @@ func GetAccountByID(id uint32) (model.Account, error) {
 }
 
 func GetAccountBySurname(surname string) (model.Account, error) {
-	stmt, err := db.Prepare(sentenceGetAccountBySurname)
+	sentence := os.Getenv("SENTENCE_GET_ACCOUNT_BY_SURNAME")
+
+	stmt, err := db.Prepare(sentence)
 	if err != nil {
 		return model.Account{}, err
 	}
