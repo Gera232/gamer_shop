@@ -12,10 +12,15 @@ import (
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatal(err)
 	}
 
 	storage.NewDB()
+
+	err = storage.Migrate()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	api.SetupRoutes()
 
