@@ -3,9 +3,9 @@ package storage
 import "os"
 
 func Migrate() error {
-	sentenceMigrate := os.Getenv("SENTENCE_MIGRATE")
+	sentence := os.Getenv("SENTENCE_MIGRATE_ACCOUNT")
 
-	stmt, err := db.Prepare(sentenceMigrate)
+	stmt, err := db.Prepare(sentence)
 	if err != nil {
 		return err
 	}
