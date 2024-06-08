@@ -5,6 +5,7 @@ import (
 	"backend/storage"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -15,9 +16,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	file, err := os.Open("./database.sql")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
 	storage.NewDB()
 
-	err = storage.Migrate()
+	err = storage.Migrate(file)
 	if err != nil {
 		log.Fatal(err)
 	}

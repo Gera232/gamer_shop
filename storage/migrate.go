@@ -1,19 +1,27 @@
 package storage
 
-import "os"
+import (
+	"io"
+	"log"
+	"os"
+	"strings"
+)
 
-func Migrate() error {
-	sentence := os.Getenv("SENTENCE_MIGRATE_ACCOUNT")
-
-	stmt, err := db.Prepare(sentence)
+func Migrate(file *os.File) error {
+	sentence, err := io.ReadAll(file)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
-	defer stmt.Close()
 
-	_, err = stmt.Exec()
-	if err != nil {
-		return err
+	sentences := strings.Split(string(sentence), ";")
+
+	for _, sentence := range sentences {
+		if strings.TrimSpace(sentence) != "" {
+			_, err := db.Exec(sentence)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
 	}
 
 	return nil
