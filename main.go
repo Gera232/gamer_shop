@@ -31,9 +31,11 @@ func main() {
 
 	api.SetupRoutes()
 
-	log.Println("Powering up server...")
+	port := os.Getenv("PORT")
 
-	err = http.ListenAndServe(":8080", nil)
+	log.Printf("Starting server on port: %v", port)
+
+	err = http.ListenAndServe(port, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
