@@ -1,4 +1,4 @@
 .env
 .env.dev
-init.sql
-database.sql
+02-init.sql
+01-database.sql
