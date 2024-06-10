@@ -16,7 +16,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	file, err := os.Open("./database.sql")
+	file, err := os.Open("./01-database.sql")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -33,7 +33,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 
-	log.Printf("Starting server on port: %v", port)
+	log.Printf("Starting server on port%v", port)
 
 	err = http.ListenAndServe(port, nil)
 	if err != nil {
