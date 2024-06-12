@@ -12,5 +12,5 @@ func SetupRoutes() {
 	http.HandleFunc("GET /GetAccounts", onlyAdmin(getAccounts))
 	http.HandleFunc("GET /GetAccountByID/{id}", onlyAdmin(getAccountByID))
 	http.HandleFunc("GET /GetAccountBySurname/{surname}", onlyAdmin(getAccountBySurname))
-	http.HandleFunc("GET /logging", logging)
+	http.HandleFunc("POST /logging", logging)
 }
