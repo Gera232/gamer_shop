@@ -29,9 +29,9 @@ func Run() {
 		AllowedHeaders: []string{"*"},
 	})
 
-	server := corsOptions.Handler(mux)
+	handler := corsOptions.Handler(mux)
 
 	log.Println("Running server...")
 
-	log.Fatal(http.ListenAndServe(port, server))
+	log.Fatal(http.ListenAndServe(port, handler))
 }
