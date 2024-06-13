@@ -3,12 +3,15 @@ package api
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/rs/cors"
 )
 
-func Run(port string) {
+func Run() {
 	mux := http.NewServeMux()
+
+	port := os.Getenv("PORT")
 
 	// Account
 	mux.HandleFunc("POST /CreateAccount", createAccount)
@@ -27,7 +30,7 @@ func Run(port string) {
 
 	server := corsOptions.Handler(mux)
 
-	log.Printf("Starting server on port%v", port)
+	log.Println("Running server...")
 
 	log.Fatal(http.ListenAndServe(port, server))
 }

@@ -28,7 +28,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	port := os.Getenv("PORT")
-
-	api.Run(port)
+	api.Run()
 }
