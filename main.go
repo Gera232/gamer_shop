@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	for i := 5; i >= 0; i-- {
+	for i := 5; i > 0; i-- {
 		log.Printf("Starting server in %v", i)
 		time.Sleep(time.Second * 1)
 	}
