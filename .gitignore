@@ -1,4 +1,4 @@
 .env
 .env.dev
-02-init.sql
-01-database.sql
+json
+sql
