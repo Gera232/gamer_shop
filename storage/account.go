@@ -1,13 +1,13 @@
 package storage
 
 import (
-	"api-account/model"
 	"api-account/security"
+	"api-account/types"
 	"database/sql"
 	"os"
 )
 
-func CreateAccount(m *model.Account) error {
+func CreateAccount(m *types.Account) error {
 	sentence := os.Getenv("SENTENCE_CREATE_ACCOUNT")
 
 	stmt, err := db.Prepare(sentence)
@@ -30,7 +30,7 @@ func CreateAccount(m *model.Account) error {
 	return nil
 }
 
-func UpdateAccount(m *model.Account) error {
+func UpdateAccount(m *types.Account) error {
 	sentence := os.Getenv("SENTENCE_UPDATE_ACCOUNT")
 
 	stmt, err := db.Prepare(sentence)
@@ -69,24 +69,24 @@ func DeleteAccount(id uint32) error {
 	return nil
 }
 
-func GetAccounts() (model.Accounts, error) {
+func GetAccounts() (types.Accounts, error) {
 	sentence := os.Getenv("SENTENCE_GET_ACCOUNTS")
 
 	stmt, err := db.Prepare(sentence)
 	if err != nil {
-		return model.Accounts{}, err
+		return types.Accounts{}, err
 	}
 	defer stmt.Close()
 
 	rows, err := stmt.Query()
 	if err != nil {
-		return model.Accounts{}, err
+		return types.Accounts{}, err
 	}
 	defer rows.Close()
 
-	accs := make(model.Accounts, 0)
+	accs := make(types.Accounts, 0)
 	for rows.Next() {
-		acc := &model.Account{}
+		acc := &types.Account{}
 		err := rows.Scan(
 			&acc.ID,
 			&acc.Name,
@@ -98,7 +98,7 @@ func GetAccounts() (model.Accounts, error) {
 			&acc.CardID,
 		)
 		if err != nil {
-			return model.Accounts{}, err
+			return types.Accounts{}, err
 		}
 		accs = append(accs, acc)
 	}
@@ -106,12 +106,12 @@ func GetAccounts() (model.Accounts, error) {
 	return accs, nil
 }
 
-func GetAccountByID(id uint32) (model.Account, error) {
+func GetAccountByID(id uint32) (types.Account, error) {
 	sentence := os.Getenv("SENTENCE_GET_ACCOUNT_BY_ID")
 
 	stmt, err := db.Prepare(sentence)
 	if err != nil {
-		return model.Account{}, err
+		return types.Account{}, err
 	}
 	defer stmt.Close()
 
@@ -119,18 +119,18 @@ func GetAccountByID(id uint32) (model.Account, error) {
 
 	acc, err := scanRow(row)
 	if err != nil {
-		return model.Account{}, err
+		return types.Account{}, err
 	}
 
 	return acc, nil
 }
 
-func GetAccountBySurname(surname string) (model.Account, error) {
+func GetAccountBySurname(surname string) (types.Account, error) {
 	sentence := os.Getenv("SENTENCE_GET_ACCOUNT_BY_SURNAME")
 
 	stmt, err := db.Prepare(sentence)
 	if err != nil {
-		return model.Account{}, err
+		return types.Account{}, err
 	}
 	defer stmt.Close()
 
@@ -138,7 +138,7 @@ func GetAccountBySurname(surname string) (model.Account, error) {
 
 	acc, err := scanRow(row)
 	if err != nil {
-		return model.Account{}, err
+		return types.Account{}, err
 	}
 
 	return acc, nil
@@ -172,8 +172,8 @@ func Logging(surname string, passwd string) (string, bool, error) {
 	return string(acc.Role), true, nil
 }
 
-func scanRow(row *sql.Row) (model.Account, error) {
-	acc := model.Account{}
+func scanRow(row *sql.Row) (types.Account, error) {
+	acc := types.Account{}
 	err := row.Scan(
 		&acc.ID,
 		&acc.Name,
@@ -185,7 +185,7 @@ func scanRow(row *sql.Row) (model.Account, error) {
 		&acc.CardID,
 	)
 	if err != nil {
-		return model.Account{}, err
+		return types.Account{}, err
 	}
 	return acc, nil
 }
