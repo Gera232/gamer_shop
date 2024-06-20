@@ -1,9 +1,9 @@
 package api
 
 import (
-	"api-account/model"
 	"api-account/security"
 	"api-account/storage"
+	"api-account/types"
 	"encoding/json"
 	"io"
 	"log"
@@ -15,7 +15,7 @@ func createAccount(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	acc := model.Account{}
+	acc := types.Account{}
 
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -55,7 +55,7 @@ func updateAccount(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	acc := model.Account{}
+	acc := types.Account{}
 
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -202,7 +202,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
-	acc := model.Account{}
+	acc := types.Account{}
 
 	reqBody, err := io.ReadAll(r.Body)
 	if err != nil {

@@ -1,4 +1,4 @@
-package model
+package types
 
 type place string
 type role string
