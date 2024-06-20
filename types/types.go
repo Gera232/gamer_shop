@@ -20,17 +20,14 @@ type Address struct {
 	Department     uint16 `json:"department"`
 	BetweenStreets string `json:"betweenStreets"`
 	Observations   string `json:"observations"`
-	ProvinceID     uint32 `json:"provinceID"`
 }
 
 type Account struct {
-	ID        uint32 `json:"id"`
-	Name      string `json:"name"`
-	Surname   string `json:"surname"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	Role      role   `json:"role"`
-	AddressID uint32 `json:"addressID"`
-	CardID    uint32 `json:"cardID"`
+	ID       uint32 `json:"id"`
+	Name     string `json:"name"`
+	Surname  string `json:"surname"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Role     role   `json:"role"`
 }
 type Accounts []*Account
