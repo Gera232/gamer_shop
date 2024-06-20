@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"backend/model"
-	"backend/security"
+	"api-account/model"
+	"api-account/security"
 	"database/sql"
 	"os"
 )

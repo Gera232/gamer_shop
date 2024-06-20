@@ -1,8 +1,8 @@
 package main
 
 import (
-	"backend/api"
-	"backend/storage"
+	"api-account/api"
+	"api-account/storage"
 	"log"
 	"os"
 
