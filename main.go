@@ -1,17 +1,13 @@
 package main
 
 import (
-	"backend/api"
-	"backend/storage"
-	"log"
+	"api-account/api"
+	"api-account/storage"
 	"time"
 )
 
 func main() {
-	for i := 5; i > 0; i-- {
-		log.Printf("Starting server in %v", i)
-		time.Sleep(time.Second * 1)
-	}
+	time.Sleep(time.Second * 5)
 
 	storage.NewDB()
 
