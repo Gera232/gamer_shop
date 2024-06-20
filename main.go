@@ -15,7 +15,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	file, err := os.Open("./01-database.sql")
+	file, err := os.Open("./sql/01-database.sql")
 	if err != nil {
 		log.Fatal(err)
 	}
