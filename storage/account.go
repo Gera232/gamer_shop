@@ -94,8 +94,6 @@ func GetAccounts() (types.Accounts, error) {
 			&acc.Email,
 			&acc.Password,
 			&acc.Role,
-			&acc.AddressID,
-			&acc.CardID,
 		)
 		if err != nil {
 			return types.Accounts{}, err
@@ -181,8 +179,6 @@ func scanRow(row *sql.Row) (types.Account, error) {
 		&acc.Email,
 		&acc.Password,
 		&acc.Role,
-		&acc.AddressID,
-		&acc.CardID,
 	)
 	if err != nil {
 		return types.Account{}, err
