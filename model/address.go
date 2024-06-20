@@ -16,5 +16,5 @@ type places string
 
 const (
 	work = "work"
-	home = "home"
+	home = "house"
 )
