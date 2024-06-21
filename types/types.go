@@ -20,6 +20,7 @@ type Address struct {
 	Department     uint16 `json:"department"`
 	BetweenStreets string `json:"betweenStreets"`
 	Observations   string `json:"observations"`
+	Shipment       bool   `json:"shipment"`
 }
 
 type Account struct {
