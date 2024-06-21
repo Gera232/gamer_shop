@@ -21,14 +21,16 @@ type Address struct {
 	BetweenStreets string `json:"betweenStreets"`
 	Observations   string `json:"observations"`
 	Shipment       bool   `json:"shipment"`
+	Location       uint32 `json:"location"`
 }
 
 type Account struct {
-	ID       uint32 `json:"id"`
-	Name     string `json:"name"`
-	Surname  string `json:"surname"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Role     role   `json:"role"`
+	ID         uint32 `json:"id"`
+	Name       string `json:"name"`
+	Surname    string `json:"surname"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Role       role   `json:"role"`
+	Address_id uint32 `json:"address_id"`
 }
 type Accounts []*Account
