@@ -21,7 +21,7 @@ type Address struct {
 	BetweenStreets string `json:"betweenStreets"`
 	Observations   string `json:"observations"`
 	Shipment       bool   `json:"shipment"`
-	Location       uint32 `json:"location"`
+	Location_id    uint32 `json:"location_id"`
 }
 
 type Account struct {
