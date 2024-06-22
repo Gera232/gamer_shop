@@ -4,11 +4,11 @@ type place string
 type role string
 
 const (
-	work   place = "work"
-	home   place = "house"
 	user   role  = "user"
 	admin  role  = "admin"
 	worker role  = "worker"
+	work   place = "work"
+	home   place = "house"
 )
 
 type Address struct {
