@@ -218,7 +218,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
-	role, auht, err := storage.Logging(acc.Surname, acc.Password)
+	role, surname, auht, err := storage.Logging(acc.Surname, acc.Password)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -232,7 +232,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := security.CreateToken(role)
+	token, err := security.CreateToken(role, surname)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)

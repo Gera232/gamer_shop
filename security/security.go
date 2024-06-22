@@ -12,8 +12,9 @@ var (
 	tk = os.Getenv("TOKEN_KEY")
 )
 
-func CreateToken(role string) (string, error) {
+func CreateToken(role string, surname string) (string, error) {
 	claims := &jwt.MapClaims{
+		"surname":   surname,
 		"role":      role,
 		"expiresAT": 15000,
 	}
