@@ -1,6 +1,6 @@
 FROM golang:1.22.1
 
-WORKDIR /app/gamer_shop/back-end/api-account
+WORKDIR /app/gamer_shop/back-end/api
 
 COPY go.mod go.sum ./
 

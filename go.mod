@@ -1,4 +1,4 @@
-module api-account
+module back-end
 
 go 1.22.1
 

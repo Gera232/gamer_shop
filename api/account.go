@@ -1,9 +1,9 @@
 package api
 
 import (
-	"api-account/security"
-	"api-account/storage"
-	"api-account/types"
+	"back-end/security"
+	"back-end/storage"
+	"back-end/types"
 	"encoding/json"
 	"io"
 	"log"

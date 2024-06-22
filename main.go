@@ -1,8 +1,8 @@
 package main
 
 import (
-	"api-account/api"
-	"api-account/storage"
+	"back-end/api"
+	"back-end/storage"
 	"time"
 )
 
