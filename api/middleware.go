@@ -1,7 +1,7 @@
 package api
 
 import (
-	"api-account/security"
+	"api/security"
 	"log"
 	"net/http"
 

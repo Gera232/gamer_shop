@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"api-account/security"
-	"api-account/types"
+	"api/security"
+	"api/types"
 	"database/sql"
 	"os"
 )
