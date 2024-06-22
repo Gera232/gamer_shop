@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"log"
 	"sync"
 )
 
@@ -17,7 +16,3 @@ var (
 	errUnauthorized    = errors.New("unauthorized")
 	errAccountNotExist = errors.New("this account not exist")
 )
-
-func sum() {
-	log.Println(1 + 1)
-}
