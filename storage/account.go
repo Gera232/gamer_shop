@@ -152,22 +152,22 @@ func ExistAccountID(id uint32) bool {
 	return acc.ID == id
 }
 
-func Logging(surname string, passwd string) (string, string, bool, error) {
+func Logging(surname string, passwd string) (string, uint32, bool, error) {
 	acc, err := GetAccountBySurname(surname)
 	if err != nil {
-		return "", "", false, err
+		return "", 0, false, err
 	}
 
 	DecodePass, err := security.Decode(acc.Password)
 	if err != nil {
-		return "", "", false, err
+		return "", 0, false, err
 	}
 
 	if DecodePass != passwd {
-		return "", "", false, nil
+		return "", 0, false, nil
 	}
 
-	return string(acc.Role), acc.Surname, true, nil
+	return string(acc.Role), acc.ID, true, nil
 }
 
 func scanRow(row *sql.Row) (types.Account, error) {

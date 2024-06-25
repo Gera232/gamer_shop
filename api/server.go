@@ -14,13 +14,13 @@ func Run() {
 	port := os.Getenv("PORT")
 
 	// Account routes
-	mux.HandleFunc("POST /CreateAccount", createAccount)
-	mux.HandleFunc("PUT /UpdateAccount", onlyAdmin(updateAccount))
-	mux.HandleFunc("DELETE /DeleteAccount/{id}", onlyAdmin(deleteAccount))
-	mux.HandleFunc("GET /GetAccounts", onlyAdmin(getAccounts))
-	mux.HandleFunc("GET /GetAccountByID/{id}", onlyAdmin(getAccountByID))
-	mux.HandleFunc("GET /GetAccountBySurname/{surname}", onlyAdmin(getAccountBySurname))
-	mux.HandleFunc("POST /logging", logging)
+	mux.HandleFunc("POST /Account/Create", handlerCreateAccount)
+	mux.HandleFunc("PUT /Account/Update", onlyAdmin(handlerUpdateAccount))
+	mux.HandleFunc("DELETE /Account/Delete/{id}", onlyAdmin(handlerDeleteAccount))
+	mux.HandleFunc("GET /Account/GetAccounts", onlyAdmin(handlerGetAccounts))
+	mux.HandleFunc("GET /Account/GetByID/{id}", onlyAdmin(handlerGetAccountByID))
+	mux.HandleFunc("GET /Account/GetBySurname/{surname}", onlyAdmin(handlerGetAccountBySurname))
+	mux.HandleFunc("POST /Account/Logging", handlerLogging)
 
 	// CORS config
 	corsOptions := cors.New(cors.Options{

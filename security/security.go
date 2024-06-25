@@ -12,11 +12,11 @@ var (
 	tk = os.Getenv("TOKEN_KEY")
 )
 
-func CreateToken(role string, surname string) (string, error) {
+func CreateToken(role string, id uint32) (string, error) {
 	claims := &jwt.MapClaims{
-		"surname":   surname,
+		"id":        id,
 		"role":      role,
-		"expiresAT": 15000,
+		"expiresAT": 900,
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -49,5 +49,6 @@ func Decode(pass string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	return string(decodePass), nil
 }
