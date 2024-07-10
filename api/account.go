@@ -11,7 +11,7 @@ import (
 	"strconv"
 )
 
-func createAccount(w http.ResponseWriter, r *http.Request) {
+func handlerCreateAccount(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -51,7 +51,7 @@ func createAccount(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func updateAccount(w http.ResponseWriter, r *http.Request) {
+func handlerUpdateAccount(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -91,7 +91,7 @@ func updateAccount(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func deleteAccount(w http.ResponseWriter, r *http.Request) {
+func handlerDeleteAccount(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -124,7 +124,7 @@ func deleteAccount(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func getAccounts(w http.ResponseWriter, r *http.Request) {
+func handlerGetAccounts(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -140,7 +140,7 @@ func getAccounts(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func getAccountByID(w http.ResponseWriter, r *http.Request) {
+func handlerGetAccountByID(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -173,7 +173,7 @@ func getAccountByID(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func getAccountBySurname(w http.ResponseWriter, r *http.Request) {
+func handlerGetAccountBySurname(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -198,7 +198,7 @@ func getAccountBySurname(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func logging(w http.ResponseWriter, r *http.Request) {
+func handlerLogging(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -218,7 +218,8 @@ func logging(w http.ResponseWriter, r *http.Request) {
 		responseJSON(w, http.StatusBadRequest, response)
 		return
 	}
-	role, surname, auht, err := storage.Logging(acc.Surname, acc.Password)
+
+	role, id, auht, err := storage.Logging(acc.Surname, acc.Password)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
@@ -232,7 +233,7 @@ func logging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := security.CreateToken(role, surname)
+	token, err := security.CreateToken(role, id)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)

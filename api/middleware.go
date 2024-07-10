@@ -2,6 +2,7 @@ package api
 
 import (
 	"back-end/security"
+	"back-end/storage"
 	"log"
 	"net/http"
 
@@ -28,8 +29,21 @@ func onlyAdmin(f http.HandlerFunc) http.HandlerFunc {
 		}
 
 		claims := validatedToken.Claims.(jwt.MapClaims)
+
+		id, ok := claims["id"].(float64)
+		if !ok {
+			response := newResponse("Error", errUnauthorized.Error(), nil)
+			responseJSON(w, http.StatusUnauthorized, response)
+			return
+		}
+
+		if !storage.ExistAccountID(uint32(id)) {
+			response := newResponse("Error", errUnauthorized.Error(), nil)
+			responseJSON(w, http.StatusUnauthorized, response)
+			return
+		}
+
 		if claims["role"] != "admin" {
-			log.Println(claims["role"])
 			response := newResponse("Error", errUnauthorized.Error(), nil)
 			responseJSON(w, http.StatusUnauthorized, response)
 			return
