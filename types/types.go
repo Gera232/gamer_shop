@@ -18,14 +18,16 @@ type Address struct {
 	ID             uint32 `json:"id"`
 	Place          place  `json:"place"`
 	Street         string `json:"street"`
-	Height         string `json:"height"`
+	Height         uint16 `json:"height"`
 	Floor          uint16 `json:"floor"`
 	Department     uint16 `json:"department"`
 	BetweenStreets string `json:"betweenStreets"`
 	Observations   string `json:"observations"`
 	Shipment       bool   `json:"shipment"`
-	Location_id    uint32 `json:"location_id"`
+	Location_ID    uint32 `json:"location_id"`
+	Account_ID     uint32 `json:"account_id"`
 }
+type Addresses []*Address
 
 type Account struct {
 	ID       uint32 `json:"id"`
