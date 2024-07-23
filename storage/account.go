@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func CreateAccount(m *types.Account) error {
+func CreateAccount(acc *types.Account) error {
 	sentence := os.Getenv("SENTENCE_CREATE_ACCOUNT")
 
 	stmt, err := db.Prepare(sentence)
@@ -17,11 +17,11 @@ func CreateAccount(m *types.Account) error {
 	defer stmt.Close()
 
 	_, err = stmt.Exec(
-		m.Name,
-		m.Surname,
-		m.Email,
-		security.Encode(m.Password),
-		m.Role,
+		acc.Name,
+		acc.Surname,
+		acc.Email,
+		security.Encode(acc.Password),
+		acc.Role,
 	)
 	if err != nil {
 		return err
@@ -30,7 +30,7 @@ func CreateAccount(m *types.Account) error {
 	return nil
 }
 
-func UpdateAccount(m *types.Account) error {
+func UpdateAccount(acc *types.Account) error {
 	sentence := os.Getenv("SENTENCE_UPDATE_ACCOUNT")
 
 	stmt, err := db.Prepare(sentence)
@@ -40,10 +40,10 @@ func UpdateAccount(m *types.Account) error {
 	defer stmt.Close()
 
 	_, err = stmt.Exec(
-		m.Name,
-		m.Surname,
-		m.Email,
-		m.Surname,
+		acc.Name,
+		acc.Surname,
+		acc.Email,
+		acc.Surname,
 	)
 	if err != nil {
 		return err
@@ -115,7 +115,7 @@ func GetAccountByID(id uint32) (types.Account, error) {
 
 	row := stmt.QueryRow(id)
 
-	acc, err := scanRow(row)
+	acc, err := scanRowAcc(row)
 	if err != nil {
 		return types.Account{}, err
 	}
@@ -134,7 +134,7 @@ func GetAccountBySurname(surname string) (types.Account, error) {
 
 	row := stmt.QueryRow(surname)
 
-	acc, err := scanRow(row)
+	acc, err := scanRowAcc(row)
 	if err != nil {
 		return types.Account{}, err
 	}
@@ -170,7 +170,7 @@ func Logging(surname string, passwd string) (string, uint32, bool, error) {
 	return string(acc.Role), acc.ID, true, nil
 }
 
-func scanRow(row *sql.Row) (types.Account, error) {
+func scanRowAcc(row *sql.Row) (types.Account, error) {
 	acc := types.Account{}
 	err := row.Scan(
 		&acc.ID,
