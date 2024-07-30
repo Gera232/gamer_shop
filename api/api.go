@@ -1,6 +1,7 @@
 package api
 
 import (
+	"back-end/storage"
 	"errors"
 	"log"
 	"net/http"
@@ -26,6 +27,9 @@ func Run() {
 	mux := http.NewServeMux()
 
 	port := os.Getenv("PORT")
+
+	// Healthcheck
+	mux.HandleFunc("GET /healthcheck", healthcheck)
 
 	// Account routes
 	mux.HandleFunc("POST /Account/Create", handlerCreateAccount)
@@ -53,4 +57,14 @@ func Run() {
 	log.Println("Running server...")
 
 	log.Fatal(http.ListenAndServe(port, handler))
+}
+
+func healthcheck(w http.ResponseWriter, r *http.Request) {
+	err := storage.Healthcheck()
+	if err != nil {
+		return
+	}
+
+	response := newResponse("", "", "")
+	responseJSON(w, http.StatusOK, response)
 }
