@@ -1,6 +1,7 @@
 package api
 
 import (
+	"back-end/storage"
 	"errors"
 	"log"
 	"net/http"
@@ -26,6 +27,9 @@ func Run() {
 	mux := http.NewServeMux()
 
 	port := os.Getenv("PORT")
+
+	// Healthcheck
+	mux.HandleFunc("GET /healthcheck", healthcheck)
 
 	// Account routes
 	mux.HandleFunc("POST /Account/Create", handlerCreateAccount)
