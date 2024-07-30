@@ -54,3 +54,13 @@ func Run() {
 
 	log.Fatal(http.ListenAndServe(port, handler))
 }
+
+func healthcheck(w http.ResponseWriter, r *http.Request) {
+	err := storage.Healthcheck()
+	if err != nil {
+		return
+	}
+
+	response := newResponse("", "", "")
+	responseJSON(w, http.StatusOK, response)
+}
