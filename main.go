@@ -9,7 +9,7 @@ import (
 func main() {
 	time.Sleep(time.Second * 30)
 
-	api.Run()
-
 	storage.NewDB()
+
+	api.Run()
 }
