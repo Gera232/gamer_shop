@@ -21,7 +21,7 @@ func main() {
 	}
 	defer file1.Close()
 
-	file2, err := os.Open("./sql/03-insert.sql")
+	file2, err := os.Open("./sql/02-insert.sql")
 	if err != nil {
 		log.Fatal(err)
 	}
