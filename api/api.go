@@ -62,6 +62,8 @@ func Run() {
 func healthcheck(w http.ResponseWriter, r *http.Request) {
 	err := storage.Healthcheck()
 	if err != nil {
+		response := newResponse("Error", errInternalServer.Error(), nil)
+		responseJSON(w, http.StatusInternalServerError, response)
 		return
 	}
 
