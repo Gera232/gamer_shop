@@ -155,7 +155,7 @@ func ExistAccountID(id uint32) bool {
 func Logging(surname string, passwd string) (string, uint32, bool, error) {
 	acc, err := GetAccountBySurname(surname)
 	if err != nil {
-		return "", 0, false, err
+		return "", 0, false, nil
 	}
 
 	DecodePass, err := security.Decode(acc.Password)
