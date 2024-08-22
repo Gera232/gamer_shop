@@ -1,4 +1,4 @@
 .env
 .env.dev
 sql
-migrate.go
+storage/migrate.go
