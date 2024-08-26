@@ -198,7 +198,7 @@ func handlerGetAccountBySurname(w http.ResponseWriter, r *http.Request) {
 	responseJSON(w, http.StatusOK, response)
 }
 
-func handlerLogging(w http.ResponseWriter, r *http.Request) {
+func handlerLogin(w http.ResponseWriter, r *http.Request) {
 	lock.Lock()
 	defer lock.Unlock()
 
@@ -219,7 +219,7 @@ func handlerLogging(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	role, id, auht, err := storage.Logging(acc.Surname, acc.Password)
+	role, id, auht, err := storage.Login(acc.Surname, acc.Password)
 	if err != nil {
 		log.Println(err)
 		response := newResponse("Error", errInternalServer.Error(), nil)
