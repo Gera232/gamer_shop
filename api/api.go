@@ -28,18 +28,13 @@ func Run() {
 	port := os.Getenv("PORT")
 
 	// Account routes
-	mux.HandleFunc("POST /Account/Create", handlerCreateAccount)
-	mux.HandleFunc("PUT /Account/Update", onlyAdmin(handlerUpdateAccount))
-	mux.HandleFunc("DELETE /Account/Delete/{id}", onlyAdmin(handlerDeleteAccount))
-	mux.HandleFunc("GET /Account/GetAccounts", onlyAdmin(handlerGetAccounts))
-	mux.HandleFunc("GET /Account/GetByID/{id}", onlyAdmin(handlerGetAccountByID))
-	mux.HandleFunc("GET /Account/GetBySurname/{surname}", onlyAdmin(handlerGetAccountBySurname))
-	mux.HandleFunc("POST /Account/Logging", handlerLogging)
-
-	// Address routes
-	mux.HandleFunc("POST /Address/Create", handlerCreateAddress)
-	mux.HandleFunc("DELETE /Address/Delete/{id}", handlerDeleteAddress)
-	mux.HandleFunc("GET /Address/GetAddresses/{id}", handlerGetAddresses)
+	mux.HandleFunc("POST /api/account/create", handlerCreateAccount)
+	mux.HandleFunc("PUT /api/account/update", onlyAdmin(handlerUpdateAccount))
+	mux.HandleFunc("DELETE /api/account/delete/{id}", onlyAdmin(handlerDeleteAccount))
+	mux.HandleFunc("GET /api/account/getAccounts", onlyAdmin(handlerGetAccounts))
+	mux.HandleFunc("GET /api/account/getByID/{id}", onlyAdmin(handlerGetAccountByID))
+	mux.HandleFunc("GET /api/account/getBySurname/{surname}", onlyAdmin(handlerGetAccountBySurname))
+	mux.HandleFunc("POST /api/account/login", handlerLogin)
 
 	// CORS config
 	corsOptions := cors.New(cors.Options{

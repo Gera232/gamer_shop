@@ -152,7 +152,7 @@ func ExistAccountID(id uint32) bool {
 	return acc.ID == id
 }
 
-func Logging(surname string, passwd string) (string, uint32, bool, error) {
+func Login(surname string, passwd string) (string, uint32, bool, error) {
 	acc, err := GetAccountBySurname(surname)
 	if err != nil {
 		return "", 0, false, nil
