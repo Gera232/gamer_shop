@@ -38,9 +38,10 @@ func Run() {
 
 	// CORS config
 	corsOptions := cors.New(cors.Options{
-		AllowedOrigins: []string{"*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE"},
-		AllowedHeaders: []string{"*"},
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPut, http.MethodOptions},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: true,
 	})
 
 	handler := corsOptions.Handler(mux)
